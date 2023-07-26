@@ -1,0 +1,67 @@
+version: '3.8'
+
+# Services
+services:
+
+  # Nginx Service
+  nginx:
+    image: nginx:1.24
+    ports:
+      - 80:80
+    volumes:
+      # - ./src:/var/www/php
+      - ./src/backend:/var/www/backend
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      # - php
+      - backend
+
+  # PHP Service
+  # php:
+  backend:
+    # build: ./.docker/php
+    build:
+      context: ./src/backend
+      args:
+        HOST_UID: $HOST_UID
+    # working_dir: /var/www/php
+    working_dir: /var/www/backend
+    volumes:
+      # - ./src:/var/www/php
+      - ./src/backend:/var/www/backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+  
+  # MySQL Service
+  mysql:
+    # image: mysql/mysql-server:8.0
+    image: mariadb:10.11.4-jammy
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: sylabusyy
+    volumes:
+      - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
+      - mysqldata:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 10
+  
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: adminer:4.8.1-standalone
+    ports:
+      - 8080:8080
+    environment:
+      # PMA_HOST: mysql
+      ADMINER_DEFAULT_SERVER: mysql
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+# Volumes
+volumes:
+
+  mysqldata:
