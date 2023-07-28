@@ -1,26 +1,31 @@
 # docker-for-local-web-development
 My docker compose for local web development LEMP
 
-## clone this repo
+## Clone this repo
 ```
-git clone ...
+git clone git@github.com:gpiotrek2/docker-for-local-web-development.git
 ```
 
-## build backend
+## Build backend
 
 ```
 docker compose build backend
 ```
 
 
-## download required packages
+## Download required packages
 
 ```
 docker compose run --rm backend composer install
 ```
 
-## run all (nginx, php, mariadb, adminer)
+## Run all (nginx, php, mariadb, adminer)
 ```
-docker compose -d up
+docker compose up
 ```
+
+## Access to services
+* nginx -> localhost:80
+* adminer -> localhost:8080
+* mariadb -> localhost:3306
 

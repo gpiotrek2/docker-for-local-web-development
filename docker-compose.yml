@@ -27,13 +27,13 @@ services:
       mysql:
         condition: service_healthy
   
-  # MariaDB Service
+  # MariaDB LTS Service
   mysql:
     image: mariadb:10.11.4-jammy
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: sylabusyy
+      MYSQL_DATABASE: demo
     ports:
       - 3306:3306
     volumes:
