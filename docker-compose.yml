@@ -9,38 +9,33 @@ services:
     ports:
       - 80:80
     volumes:
-      # - ./src:/var/www/php
       - ./src/backend:/var/www/backend
       - ./.docker/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
-      # - php
       - backend
 
-  # PHP Service
-  # php:
+  # Backend Service
   backend:
-    # build: ./.docker/php
     build:
       context: ./src/backend
       args:
         HOST_UID: $HOST_UID
-    # working_dir: /var/www/php
     working_dir: /var/www/backend
     volumes:
-      # - ./src:/var/www/php
       - ./src/backend:/var/www/backend
     depends_on:
       mysql:
         condition: service_healthy
   
-  # MySQL Service
+  # MariaDB Service
   mysql:
-    # image: mysql/mysql-server:8.0
     image: mariadb:10.11.4-jammy
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_HOST: "%"
       MYSQL_DATABASE: sylabusyy
+    ports:
+      - 3306:3306
     volumes:
       - ./.docker/mysql/my.cnf:/etc/mysql/my.cnf
       - mysqldata:/var/lib/mysql
@@ -49,13 +44,12 @@ services:
       interval: 5s
       retries: 10
   
-  # PhpMyAdmin Service
-  phpmyadmin:
+  # Adminer Service
+  adminer:
     image: adminer:4.8.1-standalone
     ports:
       - 8080:8080
     environment:
-      # PMA_HOST: mysql
       ADMINER_DEFAULT_SERVER: mysql
     depends_on:
       mysql:
