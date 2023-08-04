@@ -25,7 +25,7 @@ docker compose up
 ```
 
 ## Access to services
-* nginx -> localhost:80
-* adminer -> localhost:8080
-* mariadb -> localhost:3306
+* nginx   :80
+* adminer :8080
+* mariadb :3306
 
