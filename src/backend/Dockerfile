@@ -1,5 +1,3 @@
-# first method
-
 FROM php:8.1-fpm-alpine
 
 # Install extensions with build method (all required packages must be install manually)
